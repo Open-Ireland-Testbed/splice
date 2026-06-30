@@ -1,0 +1,95 @@
+/* Splice TUI — base styles */
+
+Screen {
+    background: $surface;
+}
+
+Header {
+    dock: top;
+    background: $primary;
+    color: $text;
+}
+
+#app-title {
+    text-style: bold;
+    padding: 0 1;
+    color: $text;
+}
+
+/* Devices table */
+#devices-table {
+    height: 1fr;
+}
+
+/* Add-device modal title */
+.title {
+    text-style: bold;
+    text-align: center;
+    margin-bottom: 1;
+    color: $accent;
+}
+
+/* Tabs */
+TabbedContent { height: 1fr; }
+
+/* Path browser */
+PathsScreen { height: 1fr; }
+#paths-root { height: 1fr; }
+#path-toolbar { height: 3; padding: 0 1; }
+#path-search { width: 1fr; }
+#path-stats { width: auto; padding: 1 2 0 2; color: $text-muted; }
+#path-body { height: 1fr; }
+#tree-panel { width: 3fr; }
+#detail-panel { width: 2fr; border-left: solid $primary; padding: 1; }
+#path-tree { height: 1fr; }
+#path-detail { height: 1fr; }
+
+/* Detail panel labels */
+.detail-label { color: $text-muted; }
+.detail-value { color: $text; }
+
+/* Empty/loading states */
+.empty-message { text-align: center; margin-top: 5; color: $text-muted; text-style: italic; }
+
+/* Telemetry screen */
+TelemetryScreen { height: 1fr; }
+#telemetry-root { height: 1fr; }
+#telemetry-toolbar { height: 3; padding: 0 1; }
+#telemetry-path-input { width: 1fr; }
+#btn-add-watch { margin: 0 1; }
+#telemetry-status { width: auto; padding: 1 2 0 2; color: $text-muted; }
+#telemetry-table { height: 1fr; }
+#telemetry-detail { height: 4; padding: 0 1; border-top: solid $primary; }
+#telemetry-sparkline { width: 2fr; height: 3; }
+#telemetry-detail-stats { width: 1fr; padding: 1 1 0 1; color: $text-muted; }
+#telemetry-stats { height: 1; padding: 0 1; color: $text-muted; }
+
+/* Status dashboard */
+StatusDashboard { height: 1fr; }
+#status-root { height: 1fr; }
+#status-cards { height: auto; min-height: 7; padding: 1 0; }
+#status-details { height: 1fr; }
+#status-health { width: 1fr; padding: 1; }
+#status-counts { width: 1fr; padding: 1; border-left: solid $primary; }
+#health-title { text-style: bold; margin-bottom: 1; }
+#counts-title { text-style: bold; margin-bottom: 1; }
+#health-detail-text { height: 1fr; }
+#counts-table { height: 1fr; }
+
+/* Operations screen */
+OperationsScreen { height: 1fr; }
+#ops-root { height: 1fr; }
+#ops-toolbar { height: 3; padding: 0 1; }
+#ops-toolbar Button { margin: 0 1; }
+#ops-server-status { width: 1fr; padding: 1 2 0 2; color: $text-muted; }
+#ops-log { height: 1fr; border: solid $primary; margin: 0 1; }
+#ops-footer { height: 1; padding: 0 1; }
+#ops-stats { width: 1fr; color: $text-muted; }
+
+/* Jobs screen */
+JobsScreen { height: 1fr; }
+#jobs-root { height: 1fr; }
+#jobs-toolbar { height: 3; padding: 0 1; }
+#jobs-status { width: 1fr; padding: 1 2 0 2; color: $text-muted; }
+#jobs-table { height: 1fr; }
+#jobs-stats { height: 1; padding: 0 1; color: $text-muted; }

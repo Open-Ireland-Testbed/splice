@@ -1,0 +1,68 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "splice"
+version = "0.1.0"
+description = "Splice — a vendor-agnostic gNMI server that bridges NETCONF devices to gNMI clients"
+readme = "README.md"
+# Dual-licensed: GNU AGPL v3.0-or-later (see LICENSE) OR a commercial licence
+# (see COMMERCIAL-LICENSE.md, contact infoknex@tcd.ie).
+license = "AGPL-3.0-or-later"
+license-files = ["LICENSE", "COMMERCIAL-LICENSE.md", "THIRD-PARTY-NOTICES.txt"]
+requires-python = ">=3.10"
+dependencies = [
+  "sqlalchemy>=2.0",
+  "psycopg[binary]>=3.1",
+  "pyyaml>=6.0",
+  "pyang>=2.7.1",
+  "grpcio>=1.66",
+  "grpcio-tools>=1.66",
+  "ncclient>=0.6",
+  # paramiko >=4 removed the SHA-1 key-exchange algorithms (diffie-hellman-group14-sha1,
+  # group1-sha1) that many optical/NETCONF devices still require; pin to 3.x so the SSH
+  # transport can negotiate with them.
+  "paramiko>=3,<4",
+  "defusedxml>=0.7",
+]
+
+[project.scripts]
+splice = "splice.cli:main"
+splice-tui = "splice.tui:main"
+
+[project.optional-dependencies]
+kafka = [
+  "confluent-kafka>=2.3",
+]
+search = [
+  "sentence-transformers>=2.2",
+  "numpy>=1.24",
+]
+openai = [
+  "openai>=1.0",
+  "numpy>=1.24",
+]
+mcp = [
+  "mcp>=1.0",
+]
+tui = [
+  "textual>=2.0",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["splice*"]
+
+[tool.setuptools.package-data]
+# Ship non-.py runtime data so wheel/PyPI installs work, not just editable ones.
+"splice" = ["migrations/*.sql"]
+"splice.tui" = ["*.tcss"]
+"splice.proto" = ["*.proto"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

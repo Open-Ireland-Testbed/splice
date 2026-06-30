@@ -1,0 +1,62 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: splice
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  bridge:
+    build:
+      context: ..
+      dockerfile: docs/Dockerfile
+    environment:
+      PYTHONPATH: src
+    volumes:
+      - ../devices:/app/devices
+      - ../logs:/app/logs
+    depends_on:
+      - postgres
+    ports:
+      - "9339:9339"
+    command: ["--config", "devices/<device_name>/config.yaml", "run"]
+
+  influxdb:
+    image: influxdb:2.7
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: admin
+      DOCKER_INFLUXDB_INIT_PASSWORD: adminadmin
+      DOCKER_INFLUXDB_INIT_ORG: gnmi
+      DOCKER_INFLUXDB_INIT_BUCKET: gnmi
+    ports:
+      - "8086:8086"
+    volumes:
+      - influx_data:/var/lib/influxdb2
+
+  grafana:
+    image: grafana/grafana:10.3.1
+    ports:
+      - "3000:3000"
+    depends_on:
+      - influxdb
+    volumes:
+      - grafana_data:/var/lib/grafana
+
+  telegraf:
+    image: telegraf:1.30
+    depends_on:
+      - influxdb
+      - bridge
+    volumes:
+      - ../docs/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+
+volumes:
+  pg_data:
+  influx_data:
+  grafana_data:

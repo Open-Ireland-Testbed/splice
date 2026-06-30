@@ -1,0 +1,1 @@
+ALTER TABLE catalog_paths ADD COLUMN IF NOT EXISTS list_keys JSONB;

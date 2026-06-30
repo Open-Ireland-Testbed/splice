@@ -1,0 +1,38 @@
+__pycache__/
+*.pyc
+.venv/
+.env
+.env.*
+*.log
+logs/
+.DS_Store
+.pytest_cache/
+dist/
+build/
+*.egg-info/
+
+# Per-device secrets and runtime data
+devices/**/password
+devices/**/config.yaml
+devices/**/config.local.yaml
+devices/**/yang/
+
+# Root-level config (contains device-specific settings)
+/config.yaml
+
+# Runtime artifacts
+setup_report.json
+debug_netconf/
+debug_teraflex/
+
+# TUI/search runtime caches and demo process state
+devices/**/.search_cache/
+demo/.pids/
+
+# Local agent / session state and internal artifacts (never publish)
+.claude/
+AGENTS.md
+*_audit.jsonl
+test_paths.txt
+*.docx
+*-this-session-is-being-continued-*.txt

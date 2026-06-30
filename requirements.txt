@@ -1,0 +1,11 @@
+sqlalchemy>=2.0
+psycopg[binary]>=3.1
+pyyaml>=6.0
+pyang>=2.7.1
+grpcio>=1.66
+grpcio-tools>=1.66
+ncclient>=0.6
+# Pin paramiko<4: 4.x dropped the SHA-1 key-exchange algorithms many legacy
+# optical/NETCONF devices still require. Keep in sync with pyproject.toml.
+paramiko>=3,<4
+defusedxml>=0.7

@@ -1,0 +1,46 @@
+device:
+  host: <device-ip>
+  port: 830
+  username: <username>
+  # password can be provided via NETCONF_PASSWORD env var
+  password:
+  name: <device_name>
+
+db:
+  url: postgresql+psycopg://postgres:postgres@localhost:5432/splice
+
+yang_dir: /absolute/path/to/yang
+
+gnmi:
+  bind: 0.0.0.0
+  port: 9339
+  heartbeat_sec: 10
+  max_runtime_sec:
+
+poller:
+  default_interval_sec: 30
+  batch_enabled: true
+  batch_mode: top
+  # rules can override per-path intervals (optional)
+  rules: []
+
+notifications:
+  enabled: false
+  poll_sec: 1
+  # optional list of canonical or alias paths to filter notifications
+  paths: []
+
+cache:
+  ttl_sec: 60
+  warm_start: true
+
+history:
+  enabled: false
+  storage: db
+  # file_path can be on a remote/NAS mount, e.g. /mnt/nas/gnmi/history.jsonl
+  file_path:
+
+health:
+  enabled: true
+  bind: 0.0.0.0
+  port: 9809

@@ -1,0 +1,72 @@
+# =============================================================================
+# Splice — Multi-Vendor Demo Stack
+#
+# Prereq: Three bridge instances running on the host via ./demo/run_demo.sh
+#   - Lumentum ROADM  → localhost:9341
+#   - Adtran Teraflex → localhost:9340
+#   - Juniper ILA     → localhost:9342
+#
+# Usage:
+#   docker compose -f demo/docker-compose.yml up -d
+#   open http://localhost:3000  (admin / admin)
+# =============================================================================
+
+services:
+  influxdb:
+    image: influxdb:2.7
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: admin
+      DOCKER_INFLUXDB_INIT_PASSWORD: adminadmin
+      DOCKER_INFLUXDB_INIT_ORG: gnmi
+      DOCKER_INFLUXDB_INIT_BUCKET: gnmi
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: demo-token-2024
+    ports:
+      - "8086:8086"
+    volumes:
+      - influx_data:/var/lib/influxdb2
+
+  telegraf-roadm:
+    image: telegraf:1.30
+    depends_on:
+      - influxdb
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./telegraf/roadm.conf:/etc/telegraf/telegraf.conf:ro
+
+  telegraf-teraflex:
+    image: telegraf:1.30
+    depends_on:
+      - influxdb
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./telegraf/teraflex.conf:/etc/telegraf/telegraf.conf:ro
+
+  telegraf-juniper:
+    image: telegraf:1.30
+    depends_on:
+      - influxdb
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./telegraf/juniper.conf:/etc/telegraf/telegraf.conf:ro
+
+  grafana:
+    image: grafana/grafana:10.3.1
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_SERVER_ROOT_URL: "%(protocol)s://%(domain)s:%(http_port)s/"
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/multi-vendor.json
+    ports:
+      - "3000:3000"
+    depends_on:
+      - influxdb
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./grafana/dashboards:/var/lib/grafana/dashboards:ro
+
+volumes:
+  influx_data:

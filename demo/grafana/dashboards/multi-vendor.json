@@ -1,0 +1,1017 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 2,
+  "id": null,
+  "links": [],
+  "liveNow": true,
+  "panels": [
+    {
+      "type": "row",
+      "title": "Optical Signal Quality (Teraflex)",
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "collapsed": false,
+      "panels": []
+    },
+    {
+      "type": "timeseries",
+      "title": "Q-Factor",
+      "description": "Optical signal quality factor from Teraflex transponders",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 1
+      },
+      "id": 10,
+      "datasource": {
+        "type": "influxdb",
+        "uid": ""
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#73BF69",
+            "mode": "fixed"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "gradientMode": "scheme",
+            "pointSize": 4,
+            "showPoints": "auto",
+            "spanNulls": true,
+            "axisCenteredZero": false,
+            "axisLabel": "dB",
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          },
+          "unit": "dB",
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 6
+              },
+              {
+                "color": "#73BF69",
+                "value": 10
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull",
+            "mean",
+            "min"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": ""
+          },
+          "query": "from(bucket: \"gnmi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"telemetry\")\n  |> filter(fn: (r) => r[\"vendor\"] == \"adtran\")\n  |> filter(fn: (r) => r[\"_field\"] =~ /q_factor/)\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\n  |> yield(name: \"q-factor\")",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "FEC BER",
+      "description": "Forward error correction bit error rate (log scale)",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 1
+      },
+      "id": 11,
+      "datasource": {
+        "type": "influxdb",
+        "uid": ""
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#FF6384",
+            "mode": "fixed"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 8,
+            "gradientMode": "scheme",
+            "pointSize": 4,
+            "showPoints": "auto",
+            "spanNulls": true,
+            "axisCenteredZero": false,
+            "axisLabel": "BER",
+            "scaleDistribution": {
+              "type": "log",
+              "log": 10
+            },
+            "axisSoftMin": 1e-09,
+            "axisSoftMax": 0.001
+          },
+          "unit": "sci",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 1e-05
+              },
+              {
+                "color": "red",
+                "value": 0.001
+              }
+            ]
+          },
+          "decimals": 2
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull",
+            "mean"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": ""
+          },
+          "query": "from(bucket: \"gnmi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"telemetry\")\n  |> filter(fn: (r) => r[\"vendor\"] == \"adtran\")\n  |> filter(fn: (r) => r[\"_field\"] =~ /fec_ber/)\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\n  |> yield(name: \"fec-ber\")",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "OSNR",
+      "description": "Optical signal-to-noise ratio",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 1
+      },
+      "id": 12,
+      "datasource": {
+        "type": "influxdb",
+        "uid": ""
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#5794F2",
+            "mode": "fixed"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 12,
+            "gradientMode": "scheme",
+            "pointSize": 4,
+            "showPoints": "auto",
+            "spanNulls": true,
+            "axisCenteredZero": false,
+            "axisLabel": "dB",
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "area"
+            }
+          },
+          "unit": "dB",
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 15
+              },
+              {
+                "color": "#5794F2",
+                "value": 20
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull",
+            "mean",
+            "min"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": ""
+          },
+          "query": "from(bucket: \"gnmi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"telemetry\")\n  |> filter(fn: (r) => r[\"vendor\"] == \"adtran\")\n  |> filter(fn: (r) => r[\"_field\"] =~ /QualityTF200g16Q.*optical_signal_to_noise_ratio/)\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\n  |> yield(name: \"osnr\")",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "row",
+      "title": "Optical Power (All Devices)",
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
+      "id": 2,
+      "collapsed": false,
+      "panels": []
+    },
+    {
+      "type": "timeseries",
+      "title": "ROADM Power",
+      "description": "Lumentum EDFA input/output power and gain",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 10
+      },
+      "id": 20,
+      "datasource": {
+        "type": "influxdb",
+        "uid": ""
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 8,
+            "gradientMode": "none",
+            "pointSize": 4,
+            "showPoints": "auto",
+            "spanNulls": true,
+            "axisCenteredZero": false,
+            "axisLabel": "dBm / dB",
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          },
+          "unit": "dBm"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/input/"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#FF9830",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/output|gain/"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#FADE2A",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull",
+            "mean"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": ""
+          },
+          "query": "from(bucket: \"gnmi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"telemetry\")\n  |> filter(fn: (r) => r[\"vendor\"] == \"lumentum\")\n  |> filter(fn: (r) => r[\"_field\"] =~ /edfa/ and r[\"_field\"] =~ /power|gain/)\n  |> toFloat()\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\n  |> yield(name: \"roadm-power\")",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Teraflex Rx Power",
+      "description": "Adtran Teraflex optical receive power",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 10
+      },
+      "id": 21,
+      "datasource": {
+        "type": "influxdb",
+        "uid": ""
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#FF9830",
+            "mode": "fixed"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "gradientMode": "scheme",
+            "pointSize": 4,
+            "showPoints": "auto",
+            "spanNulls": true,
+            "axisCenteredZero": false,
+            "axisLabel": "dBm",
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          },
+          "unit": "dBm",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": -25
+              },
+              {
+                "color": "green",
+                "value": -15
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull",
+            "mean",
+            "min"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": ""
+          },
+          "query": "from(bucket: \"gnmi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"telemetry\")\n  |> filter(fn: (r) => r[\"vendor\"] == \"adtran\")\n  |> filter(fn: (r) => r[\"_field\"] =~ /opt_rcv_pwr/)\n  |> toFloat()\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\n  |> yield(name: \"rx-power\")",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "ILA Amplifier",
+      "description": "Juniper inline amplifier input/output C-band power",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 10
+      },
+      "id": 22,
+      "datasource": {
+        "type": "influxdb",
+        "uid": ""
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 8,
+            "gradientMode": "none",
+            "pointSize": 4,
+            "showPoints": "auto",
+            "spanNulls": true,
+            "axisCenteredZero": false,
+            "axisLabel": "dBm",
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          },
+          "unit": "dBm"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/input/"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#FF9830",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/output/"
+            },
+            "properties": [
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "#FADE2A",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull",
+            "mean"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": ""
+          },
+          "query": "from(bucket: \"gnmi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"telemetry\")\n  |> filter(fn: (r) => r[\"vendor\"] == \"juniper\")\n  |> filter(fn: (r) => r[\"_field\"] =~ /input_power/)\n  |> toFloat()\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\n  |> yield(name: \"ila-power\")",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "row",
+      "title": "Transport Parameters (Teraflex)",
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 18
+      },
+      "id": 3,
+      "collapsed": false,
+      "panels": []
+    },
+    {
+      "type": "timeseries",
+      "title": "Chromatic Dispersion",
+      "description": "Accumulated chromatic dispersion on Teraflex transponders",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 19
+      },
+      "id": 30,
+      "datasource": {
+        "type": "influxdb",
+        "uid": ""
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#B877D9",
+            "mode": "fixed"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "gradientMode": "scheme",
+            "pointSize": 4,
+            "showPoints": "auto",
+            "spanNulls": true,
+            "axisCenteredZero": false,
+            "axisLabel": "ps/nm",
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          },
+          "unit": "ps/nm"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull",
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": ""
+          },
+          "query": "from(bucket: \"gnmi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"telemetry\")\n  |> filter(fn: (r) => r[\"vendor\"] == \"adtran\")\n  |> filter(fn: (r) => r[\"_field\"] =~ /ImpTF16QCdcRange2.*chromatic_dispersion/)\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\n  |> yield(name: \"cd\")",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "DGD",
+      "description": "Differential group delay from Teraflex transponders",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 19
+      },
+      "id": 31,
+      "datasource": {
+        "type": "influxdb",
+        "uid": ""
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#56A64B",
+            "mode": "fixed"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "gradientMode": "scheme",
+            "pointSize": 4,
+            "showPoints": "auto",
+            "spanNulls": true,
+            "axisCenteredZero": false,
+            "axisLabel": "ps",
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          },
+          "unit": "ps",
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 30
+              },
+              {
+                "color": "red",
+                "value": 50
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull",
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": ""
+          },
+          "query": "from(bucket: \"gnmi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"telemetry\")\n  |> filter(fn: (r) => r[\"vendor\"] == \"adtran\")\n  |> filter(fn: (r) => r[\"_field\"] =~ /QualityTF200g16Q.*differential_group_delay/)\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\n  |> yield(name: \"dgd\")",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Carrier Freq Offset",
+      "description": "Carrier frequency offset from Teraflex transponders",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 19
+      },
+      "id": 32,
+      "datasource": {
+        "type": "influxdb",
+        "uid": ""
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#3274D9",
+            "mode": "fixed"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "gradientMode": "scheme",
+            "pointSize": 4,
+            "showPoints": "auto",
+            "spanNulls": true,
+            "axisCenteredZero": true,
+            "axisLabel": "GHz",
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          },
+          "unit": "GHz"
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull",
+            "mean"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": ""
+          },
+          "query": "from(bucket: \"gnmi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"telemetry\")\n  |> filter(fn: (r) => r[\"vendor\"] == \"adtran\")\n  |> filter(fn: (r) => r[\"_field\"] =~ /carrier_frequency_offset/)\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\n  |> yield(name: \"cfo\")",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "row",
+      "title": "Device Health (All Devices)",
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 27
+      },
+      "id": 4,
+      "collapsed": false,
+      "panels": []
+    },
+    {
+      "type": "timeseries",
+      "title": "Temperature",
+      "description": "Device temperature readings across all vendors",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 28
+      },
+      "id": 40,
+      "datasource": {
+        "type": "influxdb",
+        "uid": ""
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "continuous-GrYlRd"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 15,
+            "gradientMode": "scheme",
+            "pointSize": 4,
+            "showPoints": "auto",
+            "spanNulls": true,
+            "axisCenteredZero": false,
+            "axisLabel": "C",
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "thresholdsStyle": {
+              "mode": "line"
+            }
+          },
+          "unit": "celsius",
+          "min": 0,
+          "max": 80,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 50
+              },
+              {
+                "color": "red",
+                "value": 65
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right",
+          "calcs": [
+            "lastNotNull",
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": ""
+          },
+          "query": "from(bucket: \"gnmi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"telemetry\")\n  |> filter(fn: (r) => r[\"_field\"] =~ /temperature/)\n  |> toFloat()\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\n  |> yield(name: \"temperature\")",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Power Consumption",
+      "description": "Teraflex module power consumption",
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 28
+      },
+      "id": 41,
+      "datasource": {
+        "type": "influxdb",
+        "uid": ""
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "fixedColor": "#FADE2A",
+            "mode": "fixed"
+          },
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "smooth",
+            "lineWidth": 2,
+            "fillOpacity": 15,
+            "gradientMode": "scheme",
+            "pointSize": 4,
+            "showPoints": "auto",
+            "spanNulls": true,
+            "axisCenteredZero": false,
+            "axisLabel": "W",
+            "scaleDistribution": {
+              "type": "linear"
+            }
+          },
+          "unit": "watt",
+          "min": 0,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 80
+              },
+              {
+                "color": "red",
+                "value": 100
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom",
+          "calcs": [
+            "lastNotNull",
+            "mean",
+            "max"
+          ]
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "influxdb",
+            "uid": ""
+          },
+          "query": "from(bucket: \"gnmi\")\n  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)\n  |> filter(fn: (r) => r[\"_measurement\"] == \"telemetry\")\n  |> filter(fn: (r) => r[\"vendor\"] == \"adtran\")\n  |> filter(fn: (r) => r[\"_field\"] =~ /power_consumption/)\n  |> toFloat()\n  |> aggregateWindow(every: v.windowPeriod, fn: last, createEmpty: false)\n  |> yield(name: \"power\")",
+          "refId": "A"
+        }
+      ]
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 39,
+  "tags": [
+    "gnmi",
+    "netconf",
+    "optical",
+    "demo"
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-15m",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m"
+    ],
+    "time_options": [
+      "5m",
+      "15m",
+      "1h",
+      "6h",
+      "12h",
+      "24h"
+    ]
+  },
+  "timezone": "browser",
+  "title": "Splice \u2014 Optical Network Telemetry",
+  "uid": "splice-multi-vendor",
+  "version": 1
+}

@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: splice
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      TEST_DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/splice
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install -e ".[mcp]"
+          pip install pytest
+
+      - name: Run migration safety tests
+        run: python -m pytest tests/test_migrator.py tests/test_doctor.py tests/test_cli_migration_hints.py -q
+
+      - name: Run Python API tests (no database required)
+        run: python -m pytest tests/test_api.py -v
+
+      - name: Run full test suite
+        run: python -m pytest tests/ -x -q
