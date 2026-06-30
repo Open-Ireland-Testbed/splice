@@ -49,6 +49,11 @@ mcp = [
 tui = [
   "textual>=2.0",
 ]
+docs = [
+  "mkdocs-material>=9.5",
+  "mkdocstrings[python]>=0.24",
+  "pymdown-extensions>=10",
+]
 
 [tool.setuptools]
 package-dir = {"" = "src"}

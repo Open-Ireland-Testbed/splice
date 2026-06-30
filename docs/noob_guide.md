@@ -116,5 +116,5 @@ Open Grafana, add InfluxDB data source, and import any dashboard or explore metr
 That’s it.
 
 If you see no metrics, check:
-- `docs/troubleshooting.md`
+- `troubleshooting.md`
 - `gnmic -a 127.0.0.1:9339 --insecure get --path /`

@@ -29,6 +29,10 @@ debug_teraflex/
 devices/**/.search_cache/
 demo/.pids/
 
+# MkDocs build output
+/site/
+.cache/
+
 # Local agent / session state and internal artifacts (never publish)
 .claude/
 AGENTS.md

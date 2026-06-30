@@ -1,7 +1,7 @@
 # Configuration Reference
 
 Configuration is YAML-based with one file per device at `devices/<device_name>/config.yaml`.
-A complete starter template ships as [`config.example.yaml`](../config.example.yaml) at the repo
+A complete starter template ships as [`config.example.yaml`](https://github.com/Open-Ireland-Testbed/splice/blob/main/config.example.yaml) at the repo
 root — copy it to `devices/<device_name>/config.yaml` and edit, or generate one with `splice init`.
 
 ## Full config reference
