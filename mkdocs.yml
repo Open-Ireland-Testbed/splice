@@ -1,6 +1,6 @@
 site_name: Splice
 site_description: Vendor-agnostic gNMI server that bridges NETCONF devices to gNMI clients
-site_url: https://open-ireland-testbed.github.io/splice/
+site_url: https://splice-gnmi.github.io/
 
 repo_url: https://github.com/Open-Ireland-Testbed/splice
 repo_name: Open-Ireland-Testbed/splice
