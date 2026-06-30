@@ -18,6 +18,9 @@ Modern telemetry collectors — gnmic, Telegraf, OpenConfig pipelines — expect
 
 *Three different vendors — Lumentum ROADM, Adtran Teraflex, Juniper ILA — streaming optical power into one Grafana dashboard through Splice.*
 
+!!! tip "No hardware? No problem."
+    Everything below works against a built-in simulated device. Run `splice --simulate openroadm run` and point any gNMI client at `localhost:9339`. See [Simulation](simulation.md).
+
 ## How It Works
 
 ```mermaid
@@ -32,6 +35,8 @@ graph LR
 ```
 
 Discovery walks the device's YANG library into module-qualified catalog paths, the planner batches them into efficient NETCONF reads, and a resilient poller fills a TTL cache that the gRPC server answers from. Performance-monitoring data is published under synthetic, instance-keyed paths so per-port metrics never collide.
+
+For the full picture — the three usage stacks, the layered design, and the data flow — see the **[Architecture](architecture.md)** overview.
 
 ## Key Features
 
@@ -48,6 +53,9 @@ Discovery walks the device's YANG library into module-qualified catalog paths, t
 | 🧪 | **Hardware-free simulation** | `--simulate openroadm` runs the full pipeline against a simulated device |
 | 🤖 | **AI-agent ready** | Built-in MCP server exposes the bridge as tools for Claude and other agents |
 
+!!! note "Resilience is the load-bearing design choice"
+    Optical devices frequently limit concurrent NETCONF sessions and lock accounts on repeated auth failures, so every RPC path is built to back off rather than hammer. See [Observability & Resilience](observability.md).
+
 ## Four Ways to Use It
 
 | Interface | Entry point | Best for |
@@ -63,11 +71,7 @@ Discovery walks the device's YANG library into module-qualified catalog paths, t
 
 ## Get Started
 
-- **[Quickstart →](quickstart.md)** — bring up your first device in minutes
-- **[Docker + Grafana Quickstart →](noob_guide.md)** — full telemetry stack with one compose file
-- **[Python API →](python-api.md)** — drive Splice from scripts and notebooks
-- **[API Reference →](api.md)** — the `Device` class and its methods
-- **[Configuration →](configuration.md)** — every config section, with examples
+The fastest path is two steps: **[Installation](quickstart.md)** then **[Quickstart](quickstart.md)**.
 
 Try it right now, no hardware required:
 
@@ -76,6 +80,54 @@ python -m venv .venv && source .venv/bin/activate
 pip install -e .
 splice --simulate openroadm run
 ```
+
+In another terminal, it answers gNMI like any real server:
+
+```bash
+gnmic -a localhost:9339 --insecure capabilities
+# gNMI version: 0.8.0
+# supported models:
+#   - org-openroadm-device, 2023-05-26  ...
+```
+
+Then point it at a real device:
+
+```bash
+NETCONF_PASSWORD='...' splice quickstart --host 10.0.0.1 --username admin
+```
+
+This generates a per-device config, runs full discovery, writes Grafana dashboards for the device, and starts the gNMI server. That's the whole promise — an IP in, a gNMI endpoint out.
+
+!!! example "Read live values from Python — no DB, no config files"
+    ```python
+    from splice.api.device import Device
+
+    with Device("sim://openroadm") as dev:
+        print(dev.get("/org-openroadm-device/node-id"))
+        # [{'path': '/org-openroadm-device/node-id', 'value': 'ROADM-SIM-01'}]
+    ```
+
+## Dig Deeper
+
+Explore the feature you need:
+
+- **[Architecture](architecture.md)** — the three usage stacks, layered design, and data flow
+- **[CLI Reference](cli.md)** — every `splice` command, flag, and the full setup pipeline
+- **[Querying telemetry](querying-gnmi.md)** — gNMI Get / Subscribe, path conventions, and keyed lists
+- **[MCP server](mcp.md)** — the AI-agent tool set, set policy, and error taxonomy
+- **[Simulation](simulation.md)** — run the whole pipeline against a simulated device
+- **[Performance monitoring](performance-monitoring.md)** — instance-keyed PM paths, fanout filters, and drift
+- **[Path search](path-search.md)** — hybrid BM25 + semantic search over huge YANG catalogs
+- **[Observability & Resilience](observability.md)** — health endpoint, circuit breaker, Grafana dashboards
+
+And the guides for each interface:
+
+- **[Quickstart](quickstart.md)** — bring up your first device in minutes
+- **[Docker + Grafana Quickstart](noob_guide.md)** — full telemetry stack with one compose file
+- **[Python API](python-api.md)** · **[API Reference](api.md)** — drive Splice from scripts and notebooks
+- **[TUI Guide](tui.md)** — the interactive operator console
+- **[Configuration](configuration.md)** — every config section, with examples
+- **[Deployment](deployment.md)** · **[Troubleshooting](troubleshooting.md)** — run it for real, and fix it when it breaks
 
 ## Licensing
 

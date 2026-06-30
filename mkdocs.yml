@@ -70,11 +70,22 @@ markdown_extensions:
 nav:
   - Getting Started:
       - Home: index.md
+      - Installation: installation.md
       - Quickstart: quickstart.md
-      - Docker + Grafana Quickstart: noob_guide.md
+      - Docker + Grafana: noob_guide.md
+  - Concepts:
+      - Architecture: architecture.md
   - Guides:
+      - CLI Reference: cli.md
+      - Querying Telemetry: querying-gnmi.md
+      - Writing Config (gNMI Set): writing-config.md
       - Python API: python-api.md
+      - MCP Server: mcp.md
       - TUI: tui.md
+      - Simulation: simulation.md
+      - Performance Monitoring: performance-monitoring.md
+      - Finding Paths: path-search.md
+      - Observability: observability.md
       - Deployment: deployment.md
       - Troubleshooting: troubleshooting.md
   - Reference:
