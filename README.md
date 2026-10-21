@@ -69,10 +69,12 @@ Resilience is the load-bearing design choice: optical devices frequently limit c
 
 ```bash
 python -m venv .venv && source .venv/bin/activate
-pip install -e .            # core CLI + gNMI server
-pip install -e ".[tui]"     # optional: interactive console
-pip install -e ".[mcp]"     # optional: AI-agent interface
+pip install splice-gnmi              # core CLI + gNMI server
+pip install "splice-gnmi[tui]"       # optional: interactive console
+pip install "splice-gnmi[mcp]"       # optional: AI-agent interface
 ```
+
+The package is called `splice-gnmi` on PyPI; the command and the Python import are both `splice`. To work on Splice itself, install from a clone instead (see [Development](#development)).
 
 ### 2. Try it with no hardware
 
