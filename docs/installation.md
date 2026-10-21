@@ -27,7 +27,14 @@ The core install always pulls these runtime dependencies (from `pyproject.toml`)
 
 ## Install from source
 
-Splice is installed editable (`-e`) from a clone of the repository.
+The quickest way is from PyPI, where the package is called `splice-gnmi` (the command and the Python import are both `splice`):
+
+```bash
+pip install splice-gnmi
+pip install "splice-gnmi[tui,mcp]"   # with the optional console and AI-agent interface
+```
+
+To work on Splice itself, install it editable (`-e`) from a clone of the repository:
 
 ```bash
 git clone https://github.com/Open-Ireland-Testbed/splice.git
